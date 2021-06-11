@@ -65,11 +65,12 @@ int main()
             need[i][j] = max[i][j] - alloc[i][j];
     }
     int ch;
+    int num;
     cout << "Is there any process requesting for resources?(if Yes enter 1 or else 0)" << endl;
     cin >> ch;
     if (ch)
     {
-        int num;
+
         cout << "Enter the number of process: " << endl;
         cin >> num;
         int dem[m];
@@ -78,24 +79,30 @@ int main()
         for (int i = 0; i < m; i++)
         {
             cin >> dem[i];
-            if (dem[i] > avail[i])
+            need[num][i] += dem[i];
+            if (need[num][i] > avail[i])
             {
                 cout << "Deadlock Occurs" << endl;
                 exit(1);
             }
-            avail[i] = avail[i] - dem[i];
+
+            avail[i] = avail[i] + alloc[num][i];
+            ans[ind++] = num;
+            f[num] = 1;
         }
     }
     else
     {
         cout << "Continue process" << endl;
     }
+
     int y = 0;
-    for (k = 0; k < n; k++)
+
+    for (k = 0; k < n - 1; k++)
     {
         for (i = 0; i < n; i++)
         {
-            if (f[i] == 0)
+            if (f[i] == 0 && i != num)
             {
 
                 int flag = 0;
@@ -111,6 +118,7 @@ int main()
                 if (flag == 0)
                 {
                     ans[ind++] = i;
+
                     for (y = 0; y < m; y++)
                         avail[y] += alloc[i][y];
                     f[i] = 1;
